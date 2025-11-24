@@ -35,8 +35,12 @@ class FlaskNative(Flask):
         self.add_url_rule(route, route, handler, methods=['PUT'])
 
     def add_button_route(self, route, func):
-        """Add a route for button click (GET)."""
+        """Add a route for button click (PUT)."""
         def handler():
+            if request.method == 'PUT':
+                func()
+                return '', 204
+            # fallback for GET (optional, can remove if not needed)
             for comp in self.components:
                 if hasattr(comp, 'name') and comp.name.startswith('entry_'):
                     entry_value = request.args.get(comp.name) or request.form.get(comp.name, "")
@@ -44,7 +48,7 @@ class FlaskNative(Flask):
                         comp.value = entry_value
             func()
             return redirect('/')
-        self.add_url_rule(route, route, handler, methods=['GET'])
+        self.add_url_rule(route, route, handler, methods=['PUT', 'GET'])
         
     def home(self):
         """Render the home page with either grid or packed layout."""
@@ -52,7 +56,7 @@ class FlaskNative(Flask):
         if self.grid and self.packed:
             html += '<p style="color:red;">Error: Cannot use both pack and grid layouts at the same time.</p>'
         elif self.grid:
-            html += '<table style="border-collapse:collapse;width:100%;">'
+            html += '<table style="border-collapse:collapse;">'
             max_row = max(self.grid.keys()) if self.grid else -1
             for r in range(max_row+1):
                 html += '<tr>'
@@ -60,7 +64,13 @@ class FlaskNative(Flask):
                 max_col = max(row_dict.keys()) if row_dict else -1
                 for c in range(max_col+1):
                     cell = row_dict.get(c)
-                    html += '<td style="padding:10px;">'
+                    style = ''
+                    if cell and getattr(cell, 'grid_info', None):
+                        padx = cell.grid_info.get('padx', 0)
+                        pady = cell.grid_info.get('pady', 0)
+                        if padx or pady:
+                            style = f'padding-left:{padx}px;padding-right:{padx}px;padding-top:{pady}px;padding-bottom:{pady}px;'
+                    html += f'<td{f' style="{style}"' if style else ''}>'
                     if cell:
                         html += cell.render()
                     html += '</td>'

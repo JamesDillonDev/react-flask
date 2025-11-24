@@ -4,8 +4,8 @@ from .base import BaseComponent
 
 class Button(BaseComponent):
     """A clickable button component."""
-    def __init__(self, parent, label, onClick=None, color="#007bff"):
-        super().__init__(parent)
+    def __init__(self, parent, label, onClick=None, color="#007bff", width=None, height=None):
+        super().__init__(parent, width=width, height=height)
         self.label = label
         self.onClick = onClick
         self.color = color
@@ -29,6 +29,12 @@ class Button(BaseComponent):
             'cursor: pointer; '
             'transition: background 0.3s; '
         )
+        if self.width:
+            style += f'width: {self.width}; '
+        if self.height:
+            style += f'height: {self.height}; '
+        active_css = '<style>.rf-btn:active{filter:brightness(85%);}</style>'
+        btn_class = 'rf-btn'
         if self.route:
-            return f'<form action="{self.route}" method="get" style="display:inline;"><button type="submit" style="{style}">{self.label}</button></form>'
-        return f'<button style="{style}">{self.label}</button>'
+            return f'''{active_css}<button class="{btn_class}" style="{style}" onclick="fetch('{self.route}', {{method: 'PUT'}}).then(r => r.ok && console.log('Button clicked!'))">{self.label}</button>'''
+        return f'{active_css}<button class="{btn_class}" style="{style}">{self.label}</button>'

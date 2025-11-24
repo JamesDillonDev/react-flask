@@ -4,8 +4,8 @@ from .base import BaseComponent
 
 class Entry(BaseComponent):
     """A text entry field component."""
-    def __init__(self, parent, placeholder="", value=""):
-        super().__init__(parent)
+    def __init__(self, parent, placeholder="", value="", width=None, height=None):
+        super().__init__(parent, width=width, height=height)
         self.placeholder = placeholder
         self.value = value
         self.name = f"entry_{id(self)}"
@@ -29,7 +29,12 @@ class Entry(BaseComponent):
         }}
         </script>
         """
-        return js + f'<input type="text" name="{self.name}" value="{self.value}" placeholder="{self.placeholder}" style="padding:8px;font-size:16px;border-radius:4px;border:1px solid #ccc;" oninput="updateEntry_{self.name}(this)">' 
+        style = 'padding:8px;font-size:16px;border-radius:4px;border:1px solid #ccc;'
+        if self.width:
+            style += f'width: {self.width}; '
+        if self.height:
+            style += f'height: {self.height}; '
+        return js + f'<input type="text" name="{self.name}" value="{self.value}" placeholder="{self.placeholder}" style="{style}" oninput="updateEntry_{self.name}(this)">' 
 
     def vvalue(self):
         """Return the current value of the entry field."""
