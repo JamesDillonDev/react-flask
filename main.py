@@ -1,4 +1,4 @@
-from reactflask import FlaskNative, Header, Paragraph, Button, Entry
+from reactflask import FlaskNative, Header, Paragraph, Button, Entry, Toggle
 
 # Example usage
 native = FlaskNative(__name__)
@@ -17,8 +17,12 @@ entry.grid(row=2, column=0)
 def on_button_click():
     print("Button was clicked!")
     print(entry.value)
+    print(f"Toggle is {'ON' if toggle.state else 'OFF'}")
 
 button1 = Button(native, label='Click Me', onClick=on_button_click, color="#28a745", width=300, height=40)
 button1.grid(row=2, column=1)
+
+toggle = Toggle(native, color="#a72828", initial=True)
+toggle.grid(row=3, column=0)
 
 native.run(host='0.0.0.0', port=5000)

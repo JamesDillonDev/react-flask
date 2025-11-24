@@ -49,6 +49,14 @@ class FlaskNative(Flask):
             func()
             return redirect('/')
         self.add_url_rule(route, route, handler, methods=['PUT', 'GET'])
+    
+    def add_toggle_route(self, route, toggle):
+        """Add a route to update toggle state via PUT."""
+        def handler():
+            data = request.get_json(force=True)
+            toggle.state = bool(data.get('state', False))
+            return '', 204
+        self.add_url_rule(route, route, handler, methods=['PUT'])
         
     def home(self):
         """Render the home page with either grid or packed layout."""
