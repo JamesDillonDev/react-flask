@@ -1,3 +1,19 @@
+class FlaskNative(Flask):
+    """A Flask app with simple component-based layout (pack/grid) and routes for UI events."""
+    def __init__(self, import_name):
+        super().__init__(import_name)
+        self.components = []
+        self.packed = []
+        self.grid = {}
+        self.add_url_rule('/', 'home', self.home)
+
+    def add_checkbox_route(self, route, checkbox):
+        """Add a route to update checkbox state via PUT."""
+        def handler():
+            data = request.get_json(force=True)
+            checkbox.state = bool(data.get('state', False))
+            return '', 204
+        self.add_url_rule(route, route, handler, methods=['PUT'])
 from flask import Flask, redirect, request
 
 
