@@ -1,21 +1,4 @@
-class FlaskNative(Flask):
-    """A Flask app with simple component-based layout (pack/grid) and routes for UI events."""
-    def __init__(self, import_name):
-        super().__init__(import_name)
-        self.components = []
-        self.packed = []
-        self.grid = {}
-        self.add_url_rule('/', 'home', self.home)
-
-    def add_checkbox_route(self, route, checkbox):
-        """Add a route to update checkbox state via PUT."""
-        def handler():
-            data = request.get_json(force=True)
-            checkbox.state = bool(data.get('state', False))
-            return '', 204
-        self.add_url_rule(route, route, handler, methods=['PUT'])
 from flask import Flask, redirect, request
-
 
 class FlaskNative(Flask):
     """A Flask app with simple component-based layout (pack/grid) and routes for UI events."""
@@ -49,7 +32,18 @@ class FlaskNative(Flask):
             entry.value = data.get('value', '')
             return '', 204
         self.add_url_rule(route, route, handler, methods=['PUT'])
+        
 
+    def add_switch_route(self, route, switch):
+        """Add a route to update switch state via PUT (for Switch, Checkbox, Toggle)."""
+        def handler():
+            data = request.get_json(force=True)
+            switch.state = bool(data.get('state', False))
+            if hasattr(switch, 'on_toggle') and switch.on_toggle:
+                switch.on_toggle(switch.state)
+            return '', 204
+        self.add_url_rule(route, route, handler, methods=['PUT'])
+    
     def add_button_route(self, route, func):
         """Add a route for button click (PUT)."""
         def handler():
@@ -65,14 +59,6 @@ class FlaskNative(Flask):
             func()
             return redirect('/')
         self.add_url_rule(route, route, handler, methods=['PUT', 'GET'])
-    
-    def add_toggle_route(self, route, toggle):
-        """Add a route to update toggle state via PUT."""
-        def handler():
-            data = request.get_json(force=True)
-            toggle.state = bool(data.get('state', False))
-            return '', 204
-        self.add_url_rule(route, route, handler, methods=['PUT'])
         
     def home(self):
         """Render the home page with either grid or packed layout."""

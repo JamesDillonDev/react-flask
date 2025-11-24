@@ -4,5 +4,6 @@ from .components.header import Header
 from .components.paragraph import Paragraph
 from .components.entry import Entry
 from .components.toggle import Toggle
+from .components.checkbox import Checkbox
 
-__all__ = ["FlaskNative", "Header", "Paragraph", "Button", "Entry", "Toggle"]
+__all__ = ["FlaskNative", "Header", "Paragraph", "Button", "Entry", "Toggle", "Checkbox"]

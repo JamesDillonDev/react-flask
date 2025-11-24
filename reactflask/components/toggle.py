@@ -1,20 +1,12 @@
-import hashlib
-from .base import BaseComponent
+from .switch import Switch
 
-class Toggle(BaseComponent):
-    """A switch that toggles its state and sends updates to Python."""
-    def __init__(self, parent, label_on="ON", label_off="OFF", initial=False, width=None, height=None, show_state=False, color="#007bff"):
-        super().__init__(parent, width=width, height=height)
-        self.state = initial
+class Toggle(Switch):
+    """A switch that toggles its state and sends updates to Python, using Switch logic."""
+    def __init__(self, parent, label_on="ON", label_off="OFF", initial=False, width=None, height=None, show_state=False, color="#007bff", on_toggle=None):
+        super().__init__(parent, initial=initial, width=width, height=height, color=color, on_toggle=on_toggle)
         self.label_on = label_on
         self.label_off = label_off
         self.show_state = show_state
-        self.color = color
-        self.name = f"toggle_{id(self)}"
-        self.parent.add_component(self)
-        hash_id = hashlib.md5((self.name + str(id(self))).encode()).hexdigest()[:8]
-        self.route = f"/toggle_{hash_id}"
-        parent.add_toggle_route(self.route, self)
 
     def render(self):
         if not self.visible:
@@ -88,7 +80,3 @@ class Toggle(BaseComponent):
             label_html +
             f'</span>'
         )
-
-    def vstate(self):
-        """Return the current toggle state."""
-        return self.state
