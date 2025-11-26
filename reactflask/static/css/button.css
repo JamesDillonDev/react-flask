@@ -1,0 +1,13 @@
+.rf-btn {
+    background-color: #ce2121;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.rf-btn:active {
+    filter: brightness(85%);
+}
