@@ -1,8 +1,7 @@
-from flask import Flask, redirect, request
 
 from flask import Flask, redirect, request, send_from_directory
-
 import os
+from flask_socketio import SocketIO
 
 class FlaskNative(Flask):
     """A Flask app with simple component-based layout (pack/grid) and routes for UI events."""
@@ -26,6 +25,7 @@ class FlaskNative(Flask):
         self.headerbar = None
         self.add_url_rule('/', 'home', self.home)
         self.add_static_routes()
+        self.socketio = SocketIO(self)
 
     def title(self, value):
         """Set the browser tab title."""

@@ -24,7 +24,13 @@ Button(nav, label='Settings', color="#fff", background="#34495e", width=120, hei
 Header(body, text='Main Content', level=2, width=300, color="#263238").grid(row=0, column=0, padx=8, pady=8)
 Paragraph(body, text='Welcome to the React Flask demo app. Try the interactive components below!', width=380, height=30, color="#263238").grid(row=1, column=0, padx=8, pady=8)
 
-entry = Entry(body, placeholder="Type something...", width=300, height=30, color="#263238", background="#e3eaf2").grid(row=2, column=0, padx=8, pady=16)
+entry_obj = Entry(body, placeholder="Type something...", width=300, height=30, color="#263238", background="#e3eaf2")
+entry = entry_obj.grid(row=2, column=0, padx=8, pady=16)
+
+def set_entry_value():
+    entry_obj.setValue("Hello from button!")
+    
+Button(body, label='Set Entry Value', onClick=set_entry_value, color="#fff", background="#34495e", width=200, height=40).grid(row=2, column=1, padx=8, pady=16)
 toggle = Toggle(body, label_on="Enabled", label_off="Disabled", show_state=True, color="#fff", background="#43a047", initial=False).grid(row=3, column=0, padx=8, pady=8)
 
 def on_checkbox_toggle(state):
