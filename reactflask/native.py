@@ -12,6 +12,11 @@ class FlaskNative(Flask):
         def static_css(filename):
             return send_from_directory(os.path.join(static_dir, 'css'), filename)
 
+    def setTitle(self, title):
+        """Set the browser tab title."""
+        self.title = title
+        return self
+    
     def __init__(self, import_name, title="React Flask App"):
         super().__init__(import_name)
         self.title = title
@@ -19,13 +24,16 @@ class FlaskNative(Flask):
         self.components = []
         self.packed = []
         self.grid = {}
-        self.body = None
+        self.bodies = {}  # route -> Body
         self.footer = None
         self.nav = None
         self.headerbar = None
-        self.add_url_rule('/', 'home', self.home)
         self.add_static_routes()
         self.socketio = SocketIO(self)
+
+    def register_body(self, body, route):
+        self.bodies[route] = body
+        self.add_url_rule(route, f'body_{route}', lambda: body.render_page())
 
     def title(self, value):
         """Set the browser tab title."""
@@ -42,7 +50,10 @@ class FlaskNative(Flask):
         if area is None:
             self.components.append(component)
         else:
-            if hasattr(self, area) and getattr(self, area):
+            # Support multiple bodies by area name
+            if area.startswith('body_') and area in self.bodies:
+                self.bodies[area].add_component(component)
+            elif hasattr(self, area) and getattr(self, area):
                 getattr(self, area).add_component(component)
             else:
                 self.components.append(component)
@@ -53,10 +64,18 @@ class FlaskNative(Flask):
             raise Exception("Cannot use pack when grid layout is already in use.")
         self.packed.append(component)
 
-    def add_grid(self, component, row, column):
-        """Add a component to grid layout."""
+    def add_grid(self, component, row, column, columnspan=1, rowspan=1):
+        """Add a component to grid layout, supporting columnspan and rowspan."""
         if self.packed:
             raise Exception("Cannot use grid when pack layout is already in use.")
+        if not hasattr(component, 'grid_info') or component.grid_info is None:
+            component.grid_info = {}
+        component.grid_info.update({
+            'row': row,
+            'column': column,
+            'columnspan': columnspan,
+            'rowspan': rowspan
+        })
         self.grid.setdefault(row, {})[column] = component
 
     def add_entry_route(self, route, entry):

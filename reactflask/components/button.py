@@ -2,6 +2,11 @@
 import hashlib
 from .base import BaseComponent
 
+
+class Redirect:
+    def __init__(self, route):
+        self.route = route
+
 class Button(BaseComponent):
     """A clickable button component."""
     def __init__(self, parent, label, onClick=None, color=None, background=None, width=None, height=None):
@@ -11,10 +16,15 @@ class Button(BaseComponent):
         self.color = color
         self.background = background
         self.route = None
+        self.is_redirect = False
         if onClick:
-            hash_id = hashlib.md5((label + str(id(onClick))).encode()).hexdigest()[:8]
-            self.route = f'/button_{hash_id}'
-            self._route_parent.add_button_route(self.route, onClick)
+            if isinstance(onClick, Redirect):
+                self.is_redirect = True
+                self.route = onClick.route
+            else:
+                hash_id = hashlib.md5((label + str(id(onClick))).encode()).hexdigest()[:8]
+                self.route = f'/button_{hash_id}'
+                self._route_parent.add_button_route(self.route, onClick)
 
     def render(self):
         """Render the button as HTML."""
@@ -28,5 +38,7 @@ class Button(BaseComponent):
         style = self.get_style(extra)
         btn_class = 'rf-btn'
         if self.route:
+            if self.is_redirect:
+                return f'<button class="{btn_class}" style="{style}" onclick="window.location.href=\'{self.route}\';">{self.label}</button>'
             return f'<button class="{btn_class}" style="{style}" onclick="fetch(\'{self.route}\', {{method: \'PUT\'}}).then(r => r.ok && console.log(\'Button clicked!\'))">{self.label}</button>'
         return f'<button class="{btn_class}" style="{style}">{self.label}</button>'

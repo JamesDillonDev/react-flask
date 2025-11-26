@@ -50,13 +50,21 @@ class BaseComponent:
         self.parent.add_packed(self)
         return self
 
-    def grid(self, row, column, padx=0, pady=0):
+
+    def grid(self, row, column, padx=0, pady=0, columnspan=1, rowspan=1):
         """
-        Add component to grid layout with optional padding.
+        Add component to grid layout with optional padding and span.
         """
         self.layout = 'grid'
-        self.grid_info = {'row': row, 'column': column, 'padx': padx, 'pady': pady}
-        self.parent.add_grid(self, row, column)
+        self.grid_info = {
+            'row': row,
+            'column': column,
+            'padx': padx,
+            'pady': pady,
+            'columnspan': columnspan,
+            'rowspan': rowspan
+        }
+        self.parent.add_grid(self, row, column, columnspan=columnspan, rowspan=rowspan)
         return self
 
     def show(self):
