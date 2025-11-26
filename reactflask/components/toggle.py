@@ -8,6 +8,10 @@ class Toggle(Switch):
         self.label_off = label_off
         self.show_state = show_state
         self.background = background
+        self.label_on = label_on
+        self.label_off = label_off
+        self.show_state = show_state
+        self.background = background
 
     def render(self):
         if not self.visible:
@@ -24,17 +28,15 @@ class Toggle(Switch):
         }}
         </script>
         """
-        extra = ""
-        if self.background:
-            extra += f'background-color: {self.background}; '
-        if self.color:
-            extra += f'color: {self.color}; '
-        style = self.get_style(extra)
         checked = "checked" if self.state else ""
         label_text = self.label_on if self.state else self.label_off if self.show_state else ""
-        label_html = f'<label class="rf-toggle-label">{label_text}</label>' if label_text else ''
+        label_html = f'<span class="rf-toggle-label">{label_text}</span>' if label_text else ''
+        # Use the new toggle-switch structure, with label text outside
         return (
             js +
-            f'<input type="checkbox" class="rf-toggle" style="{style}" {checked} onchange="toggle_{self.name}_change(this)">' +
+            f'<label class="toggle-switch">' +
+            f'<input type="checkbox" {checked} onchange="toggle_{self.name}_change(this)">' +
+            '<span class="slider"></span>' +
+            '</label>' +
             label_html
         )

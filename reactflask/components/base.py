@@ -26,13 +26,18 @@ class BaseComponent:
 
     def get_style(self, extra=None):
         """
-        Return inline style string for width/height and any extra styles.
+        Return inline style string for width/height, grid padding, and any extra styles.
         """
         style = ""
         if self.width:
             style += f'width: {self.width}; '
         if self.height:
             style += f'height: {self.height}; '
+        # Add grid padding as margin if in grid layout
+        if self.layout == 'grid' and self.grid_info:
+            padx = self.grid_info.get('padx', 0)
+            pady = self.grid_info.get('pady', 0)
+            style += f'margin-left: {padx}px; margin-right: {padx}px; margin-top: {pady}px; margin-bottom: {pady}px; '
         if extra:
             style += extra
         return style
