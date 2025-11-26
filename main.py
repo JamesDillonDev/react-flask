@@ -25,7 +25,7 @@ Header(body, text='Main Content', level=2, width=300, color="#263238").grid(row=
 Paragraph(body, text='Welcome to the React Flask demo app. Try the interactive components below!', width=380, height=30, color="#263238").grid(row=1, column=0, padx=8, pady=8)
 
 entry_obj = Entry(body, placeholder="Type something...", width=300, height=30, color="#263238", background="#e3eaf2")
-entry = entry_obj.grid(row=2, column=0, padx=8, pady=16)
+entry_obj.grid(row=2, column=0, padx=8, pady=16)
 
 def set_entry_value():
     entry_obj.setValue("Hello from button!")
@@ -39,7 +39,7 @@ Checkbox(body, label="Accept Terms", on_toggle=on_checkbox_toggle, initial=False
 
 def on_button_click():
     print("Button was clicked!")
-    print("Entry value:", entry.getValue())
+    print("Entry value:", entry_obj.getValue())
     print(f"Toggle is {'ON' if toggle.state else 'OFF'}")
 Button(body, label='Submit', onClick=on_button_click, color="#fff", background="#43a047", width=200, height=40).grid(row=5, column=0, padx=8, pady=8)
 

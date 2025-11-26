@@ -21,6 +21,10 @@ class Switch(BaseComponent):
             self.state = not self.state
         if self.on_toggle:
             self.on_toggle(self.state)
+    
+    def getState(self):
+        """Return the current state of the switch."""
+        return self.state
 
     def render(self):
         if not self.visible:

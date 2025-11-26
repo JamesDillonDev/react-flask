@@ -104,38 +104,7 @@ class FlaskNative(Flask):
         <link rel="stylesheet" href="/static/css/entry.css">
         <link rel="stylesheet" href="/static/css/toggle.css">
         <link rel="stylesheet" href="/static/css/checkbox.css">
-        <style>
-        body {{
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }}
-        #headerbar {{
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            width: 100%;
-        }}
-        #nav {{
-            position: sticky;
-            top: 60px;
-            z-index: 99;
-            width: 100%;
-        }}
-        #body {{
-            flex: 1 0 auto;
-            width: 100%;
-            box-sizing: border-box;
-            padding: 24px 0;
-        }}
-        #footer {{
-            position: sticky;
-            bottom: 0;
-            width: 100%;
-            z-index: 100;
-        }}
-        </style>
+        <link rel="stylesheet" href="/static/css/layout.css">
         </head><body{style}>'''
         if self.headerbar:
             html += f'<div id="headerbar">{self.headerbar.render()}</div>'
