@@ -3,9 +3,14 @@ import hashlib
 from .base import BaseComponent
 
 
-class Redirect:
+
+
+class _Redirect:
     def __init__(self, route):
         self.route = route
+
+def Redirect(route):
+    return _Redirect(route)
 
 class Button(BaseComponent):
     """A clickable button component."""
@@ -18,7 +23,7 @@ class Button(BaseComponent):
         self.route = None
         self.is_redirect = False
         if onClick:
-            if isinstance(onClick, Redirect):
+            if isinstance(onClick, _Redirect):
                 self.is_redirect = True
                 self.route = onClick.route
             else:
