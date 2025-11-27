@@ -59,25 +59,52 @@ A lightweight Python + Flask project that provides a simple component-based rend
 
 ## Example Usage
 ```python
-from reactflask import FlaskNative, Header, Paragraph, Button, Entry
+from reactflask import FlaskNative, Header, Paragraph, Button, Entry, Toggle, Checkbox, Image, Hyperlink
 
 native = FlaskNative(__name__)
 
-heading = Header(native, text='Welcome!', level=1, width=400, height=60)
-heading.grid(row=0, column=0)
+headerbar = HeaderBar(native)
+nav = Nav(native)
+footer = Footer(native)
+body_home = Body(native, route="/")
 
-paragraph = Paragraph(native, text='This is a plain paragraph.', width=380, height=30)
-paragraph.grid(row=1, column=0)
+# Shared layout components
+demo_header = Header(headerbar, text='Demo', level=1, color="#fff", background="#1976d2")
+demo_header.grid(row=0, column=0)
 
-entry = Entry(native, placeholder="Type here...", width=300, height=30)
-entry.grid(row=2, column=0)
+home_button = Button(nav, label='Home', color="#fff", background="#34495e", width=120, height=30, onClick=Redirect("/"))
+home_button.grid(row=0, column=0)
 
-def on_button_click():
-	 print("Button was clicked!")
-	 print(entry.value)
+about_button = Button(nav, label='About', color="#fff", background="#34495e", width=120, height=30, onClick=Redirect("/about"))
+about_button.grid(row=0, column=1)
 
-button1 = Button(native, label='Click Me', onClick=on_button_click, color="#28a745", width=300, height=40)
-button1.grid(row=2, column=1)
+footer_paragraph = Paragraph(footer, text='© 2025 React Flask Demo', color="#fff", background="#263238")
+footer_paragraph.grid(row=0, column=0)
+
+# Home page components
+main_header = Header(body_home, text='Main Content', level=2, color="#263238")
+main_header.grid(row=0, column=0)
+
+welcome_paragraph = Paragraph(body_home, text='Welcome to the demo app!', color="#263238")
+welcome_paragraph.grid(row=1, column=0)
+
+click_me_button = Button(body_home, label='Click Me', onClick=lambda: print('Clicked!'), color="#fff", background="#34495e")
+click_me_button.grid(row=2, column=0)
+
+entry_field = Entry(body_home, placeholder="Type here...")
+entry_field.grid(row=3, column=0)
+
+toggle_switch = Toggle(body_home, label_on="On", label_off="Off", show_state=True, color="#fff", background="#43a047")
+toggle_switch.grid(row=4, column=0)
+
+terms_checkbox = Checkbox(body_home, label="Accept Terms", color="#fff", background="#43a047")
+terms_checkbox.grid(row=5, column=0)
+
+logo_image = Image(body_home, src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg", alt="Logo", width=100, height=100)
+logo_image.grid(row=6, column=0)
+
+example_link = Hyperlink(body_home, text="Visit Example", href="https://www.example.com", color="#1976d2")
+example_link.grid(row=7, column=0)
 
 native.run(host='0.0.0.0', port=5000)
 ```

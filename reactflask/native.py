@@ -3,8 +3,19 @@ from flask import Flask, redirect, request, send_from_directory
 import os
 from flask_socketio import SocketIO
 
+
 class FlaskNative(Flask):
     """A Flask app with simple component-based layout (pack/grid) and routes for UI events."""
+
+    def add_select_route(self, route, dropdown):
+        """Add a route to update dropdown value via PUT."""
+        def handler():
+            data = request.get_json(force=True)
+            dropdown.selected = data.get('value', dropdown.selected)
+            if hasattr(dropdown, 'onChange') and dropdown.onChange:
+                dropdown.onChange(dropdown.selected)
+            return '', 204
+        self.add_url_rule(route, route, handler, methods=['PUT'])
 
     def add_static_routes(self):
         static_dir = os.path.join(os.path.dirname(__file__), 'static')
@@ -124,6 +135,7 @@ class FlaskNative(Flask):
         <link rel="stylesheet" href="/static/css/toggle.css">
         <link rel="stylesheet" href="/static/css/checkbox.css">
         <link rel="stylesheet" href="/static/css/layout.css">
+        <link rel="stylesheet" href="/static/css/dropdown.css">
         </head><body{style}>'''
         if self.headerbar:
             html += f'<div id="headerbar">{self.headerbar.render()}</div>'

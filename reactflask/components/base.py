@@ -4,6 +4,8 @@ class BaseComponent:
     Handles layout, visibility, and style logic.
     """
 
+    _id_counter = 0
+
     def __init__(self, parent, width=None, height=None):
         self.parent = parent
         self.layout = None
